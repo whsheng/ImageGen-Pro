@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ImageGen Pro</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar panel">
+        <div class="status-group">
+          <label class="field compact api-key-field">
+            <span>全局 API Key</span>
+            <input id="apiKeyInput" type="password" placeholder="输入全局 API Key" />
+          </label>
+          <label class="field compact api-base-field">
+            <span>API 地址</span>
+            <input id="apiBaseInput" type="text" placeholder="http://localhost:8000" />
+          </label>
+          <label class="field compact">
+            <span>当前模型</span>
+            <select id="modelSelect">
+              <option value="">页面初始化中...</option>
+            </select>
+          </label>
+          <div class="status-meta">
+            <span class="meta-chip">
+              <span class="meta-label">可用 Key</span>
+              <strong id="activeKeyCount">0</strong>
+            </span>
+            <span class="meta-chip">
+              <span class="meta-label">剩余配额</span>
+              <strong id="quotaLabel">--</strong>
+            </span>
+            <span class="meta-chip">
+              <span class="meta-label">认证状态</span>
+              <strong id="authLabel">未验证</strong>
+            </span>
+          </div>
+        </div>
+        <div class="lights" id="keyLights"></div>
+      </header>
+
+      <main class="workspace">
+        <section class="composer panel">
+          <div class="composer-head">
+            <div>
+              <p class="eyebrow">Prompt Studio</p>
+              <h1>ImageGen Pro</h1>
+            </div>
+            <div class="action-row">
+              <button id="refreshButton" class="ghost">刷新状态</button>
+              <button id="historyButton" class="ghost">历史记录</button>
+              <button id="templatesButton" class="ghost">模板库</button>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>图片描述</span>
+            <textarea
+              id="promptInput"
+              rows="8"
+              placeholder="输入图片描述，支持中文。可直接输入电商产品图、场景图、社媒海报需求。"
+            ></textarea>
+          </label>
+
+          <div class="form-grid">
+            <label class="field compact">
+              <span>生成数量</span>
+              <select id="countSelect">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </label>
+            <label class="field compact">
+              <span>图片尺寸</span>
+              <select id="sizeSelect">
+                <option value="1024x1024">1024x1024</option>
+                <option value="1024x1536">1024x1536</option>
+                <option value="1536x1024">1536x1024</option>
+                <option value="768x768">768x768</option>
+              </select>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="translateToggle" checked />
+              <span>中文自动翻译为英文</span>
+            </label>
+          </div>
+
+          <div class="cta-row">
+            <button id="generateButton" class="primary">生成图片</button>
+            <span id="requestStatus" class="request-status">待命</span>
+          </div>
+
+          <section id="templateVariablesPanel" class="panel-sub hidden">
+            <div class="drawer-head">
+              <h2>模板变量</h2>
+              <button id="clearTemplateSelectionButton" class="ghost small">取消模板</button>
+            </div>
+            <p id="templateVariablesHint" class="variables-hint"></p>
+            <div id="templateVariablesFields" class="variables-grid"></div>
+          </section>
+
+          <div class="drawer-grid">
+            <aside class="drawer panel-sub hidden" id="templatesPanel">
+              <div class="drawer-head">
+                <h2>模板库</h2>
+                <button data-close="templatesPanel" class="ghost small">关闭</button>
+              </div>
+              <form id="templateForm" class="template-form">
+                <input type="hidden" id="templateId" />
+                <label class="field compact">
+                  <span>模板名称</span>
+                  <input id="templateName" type="text" placeholder="如：产品白底图" />
+                </label>
+                <label class="field compact">
+                  <span>分类</span>
+                  <input id="templateCategory" type="text" placeholder="产品图 / 场景图" />
+                </label>
+                <label class="field compact">
+                  <span>描述</span>
+                  <input id="templateDescription" type="text" placeholder="模板说明" />
+                </label>
+                <label class="field compact">
+                  <span>预览图地址</span>
+                  <input
+                    id="templatePreviewImagePath"
+                    type="text"
+                    placeholder="https://... 或 /static/..."
+                  />
+                </label>
+                <label class="field">
+                  <span>模板内容</span>
+                  <textarea id="templateBody" rows="5" placeholder="支持 {product_name} 变量"></textarea>
+                </label>
+                <div class="action-row">
+                  <button type="submit" class="primary small">保存模板</button>
+                  <button type="button" id="templateResetButton" class="ghost small">清空</button>
+                </div>
+              </form>
+              <div id="templatesList" class="list"></div>
+            </aside>
+
+            <aside class="drawer panel-sub hidden" id="historyPanel">
+              <div class="drawer-head">
+                <h2>历史记录</h2>
+                <button data-close="historyPanel" class="ghost small">关闭</button>
+              </div>
+              <div id="historyList" class="list"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="results panel">
+          <div class="results-head">
+            <div>
+              <p class="eyebrow">Outputs</p>
+              <h2>生成结果</h2>
+            </div>
+            <div class="action-row">
+              <button id="downloadAllButton" class="ghost">全部下载</button>
+              <button id="copyAllButton" class="ghost">复制全部链接</button>
+              <button id="clearResultsButton" class="ghost">清空结果</button>
+            </div>
+          </div>
+          <div id="resultsGrid" class="results-grid empty">
+            <div class="empty-state">
+              <p>生成结果会显示在这里。</p>
+              <span>支持最多 4 张图片并排预览与下载。</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="bottombar panel">
+        <span>当前模型：<strong id="footerModel">--</strong></span>
+        <span>当前 Key：<strong id="footerKey">--</strong></span>
+        <span>今日生成次数：<strong id="footerCount">0</strong></span>
+      </footer>
+    </div>
+
+    <template id="resultCardTemplate">
+      <article class="result-card">
+        <div class="result-media">
+          <img alt="生成结果" loading="lazy" />
+        </div>
+        <div class="result-actions">
+          <button data-action="download" class="ghost small">下载</button>
+          <button data-action="copy" class="ghost small">复制链接</button>
+          <button data-action="remove" class="ghost small danger">删除</button>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+  </html>

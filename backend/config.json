@@ -1,0 +1,153 @@
+{
+  "global_api_key": "change-me",
+  "default_model": "agens",
+  "translation": {
+    "enabled": false,
+    "provider": "mock",
+    "api_base": "",
+    "api_key": "",
+    "model": "",
+    "chat_path": "/chat/completions",
+    "timeout_seconds": 30
+  },
+  "models": {
+    "openai": {
+      "display_name": "OpenAI Image",
+      "provider": "mock",
+      "api_base": "https://api.openai.com/v1",
+      "model_name": "gpt-image-2",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "provider_options": {
+        "request_body": {
+          "output_format": "png"
+        }
+      },
+      "keys": [
+        {
+          "id": "openai-01",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    },
+    "agens": {
+      "display_name": "Agens Image",
+      "provider": "mock",
+      "api_base": "https://apihub.agnes-ai.com/v1",
+      "model_name": "agnes-image-2.1-flash",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "keys": [
+        {
+          "id": "agens-01",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        },
+        {
+          "id": "agens-02",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ],
+      "provider_options": {}
+    },
+    "gemini": {
+      "display_name": "Gemini 2.5 Flash Image",
+      "provider": "mock",
+      "api_base": "https://generativelanguage.googleapis.com/v1beta",
+      "model_name": "gemini-2.5-flash-image",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "keys": [
+        {
+          "id": "gemini-01",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ],
+      "provider_options": {
+        "response_modalities": [
+          "IMAGE"
+        ]
+      }
+    },
+    "qwen": {
+      "display_name": "Qwen Image",
+      "provider": "mock",
+      "api_base": "https://dashscope.aliyuncs.com/api/v1",
+      "model_name": "qwen-image-2.0-pro",
+      "generate_path": "/services/aigc/multimodal-generation/generation",
+      "timeout_seconds": 120,
+      "keys": [
+        {
+          "id": "qwen-01",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ],
+      "provider_options": {
+        "parameters": {
+          "prompt_extend": true,
+          "watermark": false
+        }
+      }
+    },
+    "wuli": {
+      "display_name": "WuLi Image",
+      "provider": "mock",
+      "api_base": "https://platform.wuli.art/api/v1/platform",
+      "model_name": "Qwen Image Turbo",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "keys": [
+        {
+          "id": "wuli-01",
+          "key": "replace-with-real-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ],
+      "provider_options": {
+        "optimize_prompt": true,
+        "poll_interval_seconds": 3,
+        "poll_timeout_seconds": 180
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+tunnel: <tunnel-id>
+credentials-file: /path/to/credentials.json
+
+ingress:
+  - hostname: image-gen.your-domain.com
+    service: http://localhost:8000
+  - service: http_status:404
+

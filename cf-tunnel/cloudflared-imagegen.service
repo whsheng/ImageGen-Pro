@@ -1,0 +1,15 @@
+[Unit]
+Description=Cloudflare Tunnel for ImageGen Pro
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cloudflared
+Group=cloudflared
+ExecStart=/usr/local/bin/cloudflared --config /etc/cloudflared/imagegen-pro.yml tunnel run
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

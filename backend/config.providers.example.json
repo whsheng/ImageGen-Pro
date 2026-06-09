@@ -1,0 +1,139 @@
+{
+  "global_api_key": "replace-with-your-global-key",
+  "default_model": "agens",
+  "translation": {
+    "enabled": false,
+    "provider": "openai_compatible",
+    "api_base": "https://api.openai.com/v1",
+    "api_key": "sk-translation-provider",
+    "model": "gpt-4.1-mini",
+    "chat_path": "/chat/completions",
+    "timeout_seconds": 30
+  },
+  "models": {
+    "openai": {
+      "display_name": "OpenAI Image",
+      "provider": "openai_compatible",
+      "api_base": "https://api.openai.com/v1",
+      "model_name": "gpt-image-2",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "provider_options": {
+        "request_body": {
+          "output_format": "png"
+        }
+      },
+      "keys": [
+        {
+          "id": "openai-01",
+          "key": "replace-from-openai-docs",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    },
+    "agens": {
+      "display_name": "Agens Image",
+      "provider": "openai_compatible",
+      "api_base": "https://apihub.agnes-ai.com/v1",
+      "model_name": "agnes-image-2.1-flash",
+      "generate_path": "/images/generations",
+      "timeout_seconds": 120,
+      "keys": [
+        {
+          "id": "agens-01",
+          "key": "replace-from-agens-docs",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    },
+    "gemini": {
+      "display_name": "Gemini 2.5 Flash Image",
+      "provider": "gemini_native",
+      "api_base": "https://generativelanguage.googleapis.com/v1beta",
+      "model_name": "gemini-2.5-flash-image",
+      "timeout_seconds": 120,
+      "provider_options": {
+        "response_modalities": [
+          "IMAGE"
+        ]
+      },
+      "keys": [
+        {
+          "id": "gemini-01",
+          "key": "AIza-your-gemini-key",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    },
+    "qwen": {
+      "display_name": "Qwen Image",
+      "provider": "qwen_native",
+      "api_base": "https://dashscope.aliyuncs.com/api/v1",
+      "model_name": "qwen-image-2.0-pro",
+      "generate_path": "/services/aigc/multimodal-generation/generation",
+      "timeout_seconds": 120,
+      "provider_options": {
+        "parameters": {
+          "prompt_extend": true,
+          "watermark": false
+        }
+      },
+      "keys": [
+        {
+          "id": "qwen-01",
+          "key": "replace-from-qwen-docs",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    },
+    "wuli": {
+      "display_name": "WuLi Image",
+      "provider": "wuli_native",
+      "api_base": "https://platform.wuli.art/api/v1/platform",
+      "model_name": "Qwen Image Turbo",
+      "timeout_seconds": 120,
+      "provider_options": {
+        "optimize_prompt": true,
+        "poll_interval_seconds": 3,
+        "poll_timeout_seconds": 180
+      },
+      "keys": [
+        {
+          "id": "wuli-01",
+          "key": "replace-from-wuli-docs",
+          "status": "active",
+          "cooling_until": null,
+          "consecutive_failures": 0,
+          "last_used": null,
+          "last_success_at": null,
+          "quota_remaining_percent": 100,
+          "last_error": null
+        }
+      ]
+    }
+  }
+}
