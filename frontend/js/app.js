@@ -53,6 +53,9 @@ const elements = {
   templateVariablesFields: document.getElementById("templateVariablesFields"),
   clearTemplateSelectionButton: document.getElementById("clearTemplateSelectionButton"),
   resultCardTemplate: document.getElementById("resultCardTemplate"),
+  errorSection: document.getElementById("errorSection"),
+  errorLog: document.getElementById("errorLog"),
+  clearErrorsButton: document.getElementById("clearErrorsButton"),
 };
 
 async function initialize() {
@@ -91,6 +94,7 @@ function bindEvents() {
     state.results = [];
     renderResults();
   });
+  elements.clearErrorsButton.addEventListener("click", clearErrors);
 
   elements.templateForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -113,7 +117,8 @@ function bindEvents() {
       resetTemplateForm();
       await loadTemplates();
     } catch (error) {
-      setStatus(error.message, true);
+      setStatus("模板操作失败，详见错误日志", true);
+      addErrorEntry(error.message);
     }
   });
 
@@ -303,7 +308,8 @@ function renderTemplates() {
         await api.deleteTemplate(template.id);
         await loadTemplates();
       } catch (error) {
-        setStatus(error.message, true);
+        setStatus("删除模板失败", true);
+        addErrorEntry(error.message);
       }
     });
     elements.templatesList.append(card);
@@ -348,7 +354,8 @@ function renderHistory() {
         await Promise.all([loadModels(), loadHistory(), loadStats()]);
         setStatus(`重新生成完成，使用 Key ${payload.key_id}`);
       } catch (error) {
-        setStatus(error.message, true);
+        setStatus("重新生成失败，详见错误日志", true);
+        addErrorEntry(error.message);
       } finally {
         elements.generateButton.disabled = false;
       }
@@ -359,7 +366,8 @@ function renderHistory() {
         await loadHistory();
         await loadStats();
       } catch (error) {
-        setStatus(error.message, true);
+        setStatus("删除历史失败", true);
+        addErrorEntry(error.message);
       }
     });
     elements.historyList.append(card);
@@ -404,6 +412,7 @@ async function onGenerate() {
   try {
     elements.generateButton.disabled = true;
     setStatus("生成中...");
+    clearErrors();
     const payload = await api.generateImage({
       model: state.selectedModel,
       prompt,
@@ -418,7 +427,8 @@ async function onGenerate() {
     await Promise.all([loadModels(), loadHistory(), loadStats()]);
     setStatus(`生成完成，使用 Key ${payload.key_id}`);
   } catch (error) {
-    setStatus(error.message, true);
+    setStatus("生成失败，详见错误日志", true);
+    addErrorEntry(error.message);
   } finally {
     elements.generateButton.disabled = false;
   }
@@ -525,6 +535,26 @@ function persistApiBase() {
 function setStatus(message, isError = false) {
   elements.requestStatus.textContent = message;
   elements.requestStatus.style.color = isError ? "var(--red)" : "";
+}
+
+function addErrorEntry(message) {
+  elements.errorLog.querySelectorAll(".error-placeholder").forEach((el) => el.remove());
+  const entry = document.createElement("div");
+  entry.className = "error-entry";
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
+  entry.innerHTML = `
+    <div class="error-entry-header">
+      <span class="error-time">${time}</span>
+      <span class="error-msg">${escapeHtml(message)}</span>
+    </div>
+  `;
+  elements.errorLog.prepend(entry);
+  elements.errorSection.classList.remove("hidden");
+}
+
+function clearErrors() {
+  elements.errorLog.innerHTML = '<p class="error-placeholder">暂无错误。</p>';
 }
 
 function setAuthState(status) {

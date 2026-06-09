@@ -8,102 +8,130 @@
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar panel">
-        <div class="status-group">
+      <!-- ===== TOP HEADER: Logo + Status ===== -->
+      <header class="app-header panel">
+        <div class="header-brand">
+          <div class="logo-mark">IG</div>
+          <div class="brand-text">
+            <h1>ImageGen Pro</h1>
+            <span class="brand-tagline">Multi-Model Image Generation</span>
+          </div>
+        </div>
+        <div class="header-status">
           <label class="field compact api-key-field">
-            <span>全局 API Key</span>
+            <span>API Key</span>
             <input id="apiKeyInput" type="password" placeholder="输入全局 API Key" />
           </label>
           <label class="field compact api-base-field">
             <span>API 地址</span>
             <input id="apiBaseInput" type="text" placeholder="http://localhost:8000" />
           </label>
-          <label class="field compact">
-            <span>当前模型</span>
-            <select id="modelSelect">
-              <option value="">页面初始化中...</option>
-            </select>
-          </label>
-          <div class="status-meta">
-            <span class="meta-chip">
-              <span class="meta-label">可用 Key</span>
-              <strong id="activeKeyCount">0</strong>
-            </span>
-            <span class="meta-chip">
-              <span class="meta-label">剩余配额</span>
-              <strong id="quotaLabel">--</strong>
-            </span>
-            <span class="meta-chip">
-              <span class="meta-label">认证状态</span>
-              <strong id="authLabel">未验证</strong>
-            </span>
-          </div>
+          <span class="meta-chip">
+            <span class="meta-label">认证</span>
+            <strong id="authLabel">未验证</strong>
+          </span>
+          <div class="lights" id="keyLights"></div>
         </div>
-        <div class="lights" id="keyLights"></div>
       </header>
 
-      <main class="workspace">
-        <section class="composer panel">
-          <div class="composer-head">
-            <div>
-              <p class="eyebrow">Prompt Studio</p>
-              <h1>ImageGen Pro</h1>
+      <!-- ===== CONTENT: Sidebar (Left) + Results (Right) ===== -->
+      <main class="app-content">
+        <!-- Left: Function Area -->
+        <aside class="sidebar panel">
+          <section class="sidebar-section model-section">
+            <h2 class="section-title">模型与状态</h2>
+            <div class="model-row">
+              <label class="field compact">
+                <span>当前模型</span>
+                <select id="modelSelect">
+                  <option value="">页面初始化中...</option>
+                </select>
+              </label>
+              <div class="model-meta">
+                <span class="meta-chip">
+                  <span class="meta-label">可用 Key</span>
+                  <strong id="activeKeyCount">0</strong>
+                </span>
+                <span class="meta-chip">
+                  <span class="meta-label">配额</span>
+                  <strong id="quotaLabel">--</strong>
+                </span>
+              </div>
             </div>
-            <div class="action-row">
+          </section>
+
+          <section class="sidebar-section composer-section">
+            <h2 class="section-title">Prompt Studio</h2>
+            <label class="field">
+              <span>图片描述</span>
+              <textarea
+                id="promptInput"
+                rows="6"
+                placeholder="输入图片描述，支持中文。可直接输入电商产品图、场景图、社媒海报需求。"
+              ></textarea>
+            </label>
+
+            <div class="form-grid">
+              <label class="field compact">
+                <span>生成数量</span>
+                <select id="countSelect">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+              <label class="field compact">
+                <span>图片尺寸</span>
+                <select id="sizeSelect">
+                  <option value="1024x1024">1024x1024</option>
+                  <option value="1024x1536">1024x1536</option>
+                  <option value="1536x1024">1536x1024</option>
+                  <option value="768x768">768x768</option>
+                </select>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="translateToggle" checked />
+                <span>中文自动翻译为英文</span>
+              </label>
+            </div>
+
+            <div class="cta-row">
+              <button id="generateButton" class="primary">生成图片</button>
+              <span id="requestStatus" class="request-status">待命</span>
+            </div>
+
+            <!-- Template Variables (shown when a template is selected) -->
+            <section id="templateVariablesPanel" class="panel-sub hidden">
+              <div class="drawer-head">
+                <h3>模板变量</h3>
+                <button id="clearTemplateSelectionButton" class="ghost small">取消模板</button>
+              </div>
+              <p id="templateVariablesHint" class="variables-hint"></p>
+              <div id="templateVariablesFields" class="variables-grid"></div>
+            </section>
+          </section>
+
+          <section class="sidebar-section tools-section">
+            <div class="tool-buttons">
               <button id="refreshButton" class="ghost">刷新状态</button>
               <button id="historyButton" class="ghost">历史记录</button>
               <button id="templatesButton" class="ghost">模板库</button>
             </div>
-          </div>
-
-          <label class="field">
-            <span>图片描述</span>
-            <textarea
-              id="promptInput"
-              rows="8"
-              placeholder="输入图片描述，支持中文。可直接输入电商产品图、场景图、社媒海报需求。"
-            ></textarea>
-          </label>
-
-          <div class="form-grid">
-            <label class="field compact">
-              <span>生成数量</span>
-              <select id="countSelect">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </label>
-            <label class="field compact">
-              <span>图片尺寸</span>
-              <select id="sizeSelect">
-                <option value="1024x1024">1024x1024</option>
-                <option value="1024x1536">1024x1536</option>
-                <option value="1536x1024">1536x1024</option>
-                <option value="768x768">768x768</option>
-              </select>
-            </label>
-            <label class="toggle">
-              <input type="checkbox" id="translateToggle" checked />
-              <span>中文自动翻译为英文</span>
-            </label>
-          </div>
-
-          <div class="cta-row">
-            <button id="generateButton" class="primary">生成图片</button>
-            <span id="requestStatus" class="request-status">待命</span>
-          </div>
-
-          <section id="templateVariablesPanel" class="panel-sub hidden">
-            <div class="drawer-head">
-              <h2>模板变量</h2>
-              <button id="clearTemplateSelectionButton" class="ghost small">取消模板</button>
-            </div>
-            <p id="templateVariablesHint" class="variables-hint"></p>
-            <div id="templateVariablesFields" class="variables-grid"></div>
           </section>
 
+          <!-- Error Log Panel -->
+          <section class="sidebar-section error-section" id="errorSection">
+            <div class="drawer-head">
+              <h2 class="section-title error-title">错误日志</h2>
+              <button id="clearErrorsButton" class="ghost small">清空</button>
+            </div>
+            <div id="errorLog" class="error-log">
+              <p class="error-placeholder">暂无错误。</p>
+            </div>
+          </section>
+
+          <!-- Drawers: Templates & History -->
           <div class="drawer-grid">
             <aside class="drawer panel-sub hidden" id="templatesPanel">
               <div class="drawer-head">
@@ -152,9 +180,10 @@
               <div id="historyList" class="list"></div>
             </aside>
           </div>
-        </section>
+        </aside>
 
-        <section class="results panel">
+        <!-- Right: Results Area -->
+        <section class="results-area panel">
           <div class="results-head">
             <div>
               <p class="eyebrow">Outputs</p>
@@ -172,14 +201,13 @@
               <span>支持最多 4 张图片并排预览与下载。</span>
             </div>
           </div>
+          <footer class="results-footer">
+            <span>当前模型：<strong id="footerModel">--</strong></span>
+            <span>当前 Key：<strong id="footerKey">--</strong></span>
+            <span>今日生成：<strong id="footerCount">0</strong></span>
+          </footer>
         </section>
       </main>
-
-      <footer class="bottombar panel">
-        <span>当前模型：<strong id="footerModel">--</strong></span>
-        <span>当前 Key：<strong id="footerKey">--</strong></span>
-        <span>今日生成次数：<strong id="footerCount">0</strong></span>
-      </footer>
     </div>
 
     <template id="resultCardTemplate">
@@ -197,4 +225,4 @@
 
     <script type="module" src="./js/app.js"></script>
   </body>
-  </html>
+</html>
